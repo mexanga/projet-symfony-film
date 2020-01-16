@@ -30,6 +30,7 @@ class InstallCommand extends Command
     {
 
         ini_set('max_execution_time', 5120);
+        ini_set('memory_limit', -1);
 
         $io = new SymfonyStyle($input, $output);
 //        $arg1 = $input->getArgument('arg1');
@@ -80,6 +81,7 @@ class InstallCommand extends Command
           // Lancer l'exeception
           // $io->progressFinish(); ?
         }
+
         $io->progressFinish();
 
         $io->success('Succès !');

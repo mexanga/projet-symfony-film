@@ -30,7 +30,8 @@ class BuildCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
 
-        ini_set('max_execution_time', 2056);
+        ini_set('max_execution_time', 5120);
+        ini_set('memory_limit', -1);
 
         $io = new SymfonyStyle($input, $output);
 //        $arg1 = $input->getArgument('arg1');
