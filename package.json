@@ -17,6 +17,7 @@
     "jquery": "^3.4.1",
     "node-sass": "^4.13.1",
     "popper.js": "^1.16.0",
-    "sass-loader": "^8.0.2"
+    "sass-loader": "^8.0.2",
+    "webpack-encore-bundle": "symfony/webpack-encore-bundle"
   }
 }
