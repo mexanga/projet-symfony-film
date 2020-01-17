@@ -8,6 +8,49 @@
     <body>
         {% block body %}{% endblock %}
         {% block javascripts %}{% endblock %}
-        {{ encore_entry_script_tags('app') }}
+        {#  encore_entry_script_tags('app') #}
+        <script>
+            const entrypointsFile = '/build/entrypoints.json';
+
+            fetch(entrypointsFile)
+                .then(function(response) {
+                    var contentType = response.headers.get("content-type");
+                    if(contentType && contentType.indexOf("application/json") !== -1) {
+                        return response.json();
+                    }
+                })
+                .then(function(fileContent) {
+                    const jsFiles = fileContent.entrypoints.app.js || [];
+                    let numberOfJsFiles = jsFiles.length;
+                    for ( ; 0 < numberOfJsFiles++ ; ) {
+                        const currentJsFile = jsFiles[numberOfJsFiles];
+                        const fileElement = document.createElement('script');
+                        fileElement.src = currentJsFile;
+                        document.body.appendChild(fileElement);
+                    }
+                });
+        </script>
+        <script>
+            const entrypointsFile = '/build/entrypoints.json';
+
+            fetch(entrypointsFile)
+                .then(function(response) {
+                    var contentType = response.headers.get("content-type");
+                    if(contentType && contentType.indexOf("text/css") !== -1) {
+                        return response.text();
+                    }
+                })
+                .then(function(fileContent) {
+                    const cssFiles = fileContent.entrypoints.app.css || [];
+                    let numberOfCssFiles = cssFiles.length;
+                    for ( ; 0 < numberOfCssFiles++ ; ) {
+                        const currentCssFile = cssFiles[numberOfCssFiles];
+                        const fileElement = document.createElement('link');
+                        fileElement.href = currentCssFile;
+                        fileElement.rel = 'stylesheet'  ;
+                        document.head.appendChild(fileElement);
+                    }
+                });
+        </script>
     </body>
 </html>
