@@ -1,6 +1,7 @@
 #!/bin/sh
 
 cp .env.docker .env
+composer clear-cache
 composer dumpa
 composer install
 npm install
