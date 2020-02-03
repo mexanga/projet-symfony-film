@@ -1,0 +1,34 @@
+<script type="text/javascript">
+  document.addEventListener(
+  'DOMContentLoaded', function(documentScope) {
+    onLoadNavbar(documentScope);
+  }
+);
+
+function onLoadNavbar(documentScope) {
+  const navbar = document.querySelector('.navbar');
+  document.addEventListener('scroll', onScroll);
+  onScroll(null);
+
+  function onScroll(event) {
+    const {
+      scrollY
+    } = window;
+    const isTop = 0 === scrollY;
+    if (isTop) {
+      navbar.classList.remove('affix');
+      return;
+    }
+    navbar.classList.add('affix');
+  }
+
+  const ham = document.querySelector('.ham');
+  const navbarToggler = document.querySelector('.navbar-toggler');
+  navbarToggler.addEventListener('click', navbarTogglerOnClick);
+
+  function navbarTogglerOnClick(event) {
+    navbar.classList.toggle('active');
+    ham.classList.toggle('active');
+  }
+}
+</script>

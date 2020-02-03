@@ -14,7 +14,7 @@ RUN apt-get update && apt-get install -y \
         libpng-dev \
     && docker-php-ext-configure gd --with-jpeg-dir=/usr/include \
     && docker-php-ext-configure calendar \
-    && docker-php-ext-install gd calendar
+    && docker-php-ext-install gd calendar mysqli
 
 COPY conf.d/xdebug.ini $PHP_INI_DIR/conf.d/xdebug.ini
 COPY default.conf /etc/apache2/sites-available/000-default.conf
