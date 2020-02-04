@@ -3,30 +3,41 @@
 namespace App\Controller;
 
 use App\Entity\Game;
-use App\Form\GameType;
 use App\Repository\GameRepository;
+use App\Form\GameType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
  * @Route("/game")
  */
 class GameController extends AbstractController
 {
+    private $gameRepository;
+
+    public function __construct(
+      GameRepository $gameRepository
+    ) {
+      $this->gameRepository = $gameRepository;
+    }
+
     /**
      * @Route("/", name="game_index", methods={"GET"})
      */
-    public function index(GameRepository $gameRepository): Response
+    public function index(): Response
     {
         return $this->render('game/index.html.twig', [
-            'games' => $gameRepository->findAll(),
+            'games' => $this->gameRepository->findAll(),
         ]);
     }
 
     /**
      * @Route("/new", name="game_new", methods={"GET","POST"})
+     * @IsGranted("ROLE_ADMIN")
      */
     public function new(Request $request): Response
     {
@@ -38,6 +49,8 @@ class GameController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($game);
             $entityManager->flush();
+
+            $this->addFlash('success', "The game has been created !");
 
             return $this->redirectToRoute('game_index');
         }
@@ -60,6 +73,7 @@ class GameController extends AbstractController
 
     /**
      * @Route("/{id}/edit", name="game_edit", methods={"GET","POST"})
+     * @IsGranted("ROLE_ADMIN")
      */
     public function edit(Request $request, Game $game): Response
     {
@@ -68,6 +82,8 @@ class GameController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
+
+            $this->addFlash('success', "The game has been updated !");
 
             return $this->redirectToRoute('game_index');
         }
@@ -80,6 +96,7 @@ class GameController extends AbstractController
 
     /**
      * @Route("/{id}", name="game_delete", methods={"DELETE"})
+     * @IsGranted("ROLE_ADMIN")
      */
     public function delete(Request $request, Game $game): Response
     {
@@ -88,6 +105,8 @@ class GameController extends AbstractController
             $entityManager->remove($game);
             $entityManager->flush();
         }
+
+        $this->addFlash('success', "The game has been removed !");
 
         return $this->redirectToRoute('game_index');
     }

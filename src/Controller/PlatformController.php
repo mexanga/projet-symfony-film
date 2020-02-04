@@ -9,24 +9,36 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
  * @Route("/platform")
  */
 class PlatformController extends AbstractController
 {
+
+    private $platformRepository;
+
+    public function __construct(
+      PlatformRepository $platformRepository
+    ) {
+      $this->platformRepository = $platformRepository;
+    }
+
     /**
      * @Route("/", name="platform_index", methods={"GET"})
      */
-    public function index(PlatformRepository $platformRepository): Response
+    public function index(): Response
     {
         return $this->render('platform/index.html.twig', [
-            'platforms' => $platformRepository->findAll(),
+            'platforms' => $this->platformRepository->findAll(),
         ]);
     }
 
     /**
      * @Route("/new", name="platform_new", methods={"GET","POST"})
+     * @IsGranted("ROLE_ADMIN")
      */
     public function new(Request $request): Response
     {
@@ -38,6 +50,8 @@ class PlatformController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($platform);
             $entityManager->flush();
+
+            $this->addFlash('success', "The platform has been created !");
 
             return $this->redirectToRoute('platform_index');
         }
@@ -60,6 +74,7 @@ class PlatformController extends AbstractController
 
     /**
      * @Route("/{id}/edit", name="platform_edit", methods={"GET","POST"})
+     * @IsGranted("ROLE_ADMIN")
      */
     public function edit(Request $request, Platform $platform): Response
     {
@@ -68,6 +83,8 @@ class PlatformController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
+
+            $this->addFlash('success', "The platform has been updated !");
 
             return $this->redirectToRoute('platform_index');
         }
@@ -80,6 +97,7 @@ class PlatformController extends AbstractController
 
     /**
      * @Route("/{id}", name="platform_delete", methods={"DELETE"})
+     * @IsGranted("ROLE_ADMIN")
      */
     public function delete(Request $request, Platform $platform): Response
     {
@@ -88,6 +106,8 @@ class PlatformController extends AbstractController
             $entityManager->remove($platform);
             $entityManager->flush();
         }
+
+        $this->addFlash('success', "The platform has been removed !");
 
         return $this->redirectToRoute('platform_index');
     }

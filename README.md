@@ -2,9 +2,19 @@
 
 Projet créé pour l'école IPSSI.
 
-## Installation
+## Installation (avec docker)
 
-### Prequis
+```
+docker-compose up
+```
+
+### Pré-requis
+
+ * Docker
+
+## Installation (sans docker)
+
+### Pré-requis
 
 * NPM
 * Yarn

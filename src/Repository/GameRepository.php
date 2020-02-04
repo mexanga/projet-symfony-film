@@ -19,6 +19,22 @@ class GameRepository extends ServiceEntityRepository
         parent::__construct($registry, Game::class);
     }
 
+    public function findByCategory($value, $page = 1)
+    {
+        if (1 > $page) {
+          return;
+        }
+
+        return $this->createQueryBuilder('g')
+            ->andWhere('g.category = :val')
+            ->setParameter('val', $value)
+            ->orderBy('g.name', 'ASC')
+            ->setMaxResults(10 * $page)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
     // /**
     //  * @return Game[] Returns an array of Game objects
     //  */

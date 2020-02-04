@@ -17,11 +17,6 @@ services:
             - MYSQL_HOST=${MYSQL_HOST}
             - MYSQL_PORT=${MYSQL_PORT}
             - MYSQL_RANDOM_ROOT_PASSWORD=yes
-#            - MYSQL_ALLOW_EMPTY_PASSWORD=yes
-#            - MYSQL_ROOT_PASSWORD=/run/secrets/my_secret
-#            - MYSQL_RANDOM_ROOT_PASSWORD=yes
-#        secrets:
-#            - my_secret
     web:
         container_name: symfony-film-web
         build: .docker/php
@@ -34,7 +29,7 @@ services:
     node:
         container_name: symfony-film-node
         image: node:12-alpine #node:alpine3.10
-        command: sh -c "yarn install && yarn encore dev --watch"
+        command: sh -c "apt-get install php7.0-xml; yarn install && yarn encore dev --watch"
         volumes:
             - .:/app:cached
         working_dir: /app
